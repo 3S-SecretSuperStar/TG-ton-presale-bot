@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: presalebot
+    environment:
+      POSTGRES_DB: presalebot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: presalebot
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -q -d presalebot -U postgres"]
+      interval: 5s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    networks:
+      - presalebot_network
+  app:
+    build: .    
+    command: ["python", "app.py"]
+    volumes:    
+      - ./logs:/app/logs   # Mapping local folder 'logs' to container's 'logs' folder
+    environment:
+      - DB_HOST=postgres  # Update DB_HOST to use the service name
+      - DB_DATABASE=presalebot
+      - DB_USER=postgres
+      - DB_PASSWORD=presalebot
+      - PORT=5432
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - presalebot_network
+
+volumes:
+  db:
+    driver: local
+
+networks:
+  presalebot_network:
+    name: presalebot_network  # Explicitly set the name of the network
+    driver: bridge

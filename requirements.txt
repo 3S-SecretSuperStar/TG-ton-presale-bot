@@ -1,0 +1,6 @@
+psycopg2
+selenium
+webdriver_manager
+schedule
+python-dotenv
+bs4
