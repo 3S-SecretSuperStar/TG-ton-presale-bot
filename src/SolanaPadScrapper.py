@@ -3,11 +3,11 @@
 import time
 import logging
 # from bs4 import BeautifulSoup
-from src.TokenData import TokenData
+from TokenData import TokenData
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from src.BaseScrapper import BaseScrapper
+from BaseScrapper import BaseScrapper
 
 class SolanaPadScrapper(BaseScrapper):
     def __init__(self, logging):

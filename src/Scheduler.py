@@ -51,18 +51,19 @@ class Scheduler:
                 #logging.info('URL: %s', link.get_attribute('href'))  # Print the href attribute value of each <a> tag
                 if self.db.check_project_url(proj_url) == False:   
                     self.logging.info('Project seems to be new, Scrapping URL: %s', proj_url)    
-                    # data = self.solanapad.extract_data(proj_url=proj_url)
-                    # if data.live_status == True:
-                    #     self.logging.info('Project is Live, Add Info to DB: %s', proj_url)
-                    #     self.db.insert_project_data(proj_url, data)
-                    #     continue
-                    # else:
-                    #     self.logging.info('Project is not LIVE, Skipping URL: %s', proj_url)
+                    #data = self.solanapad.extract_data(proj_url=proj_url)
+                    data = self.solanapad.extract_token_info_strategy1(url=proj_url)
+                    if data.live_status == True:
+                        self.logging.info('Project is Live, Add Info to DB: %s', proj_url)
+                        self.db.insert_project_data(proj_url, data)
+                        continue
+                    else:
+                        self.logging.info('Project is not LIVE, Skipping URL: %s', proj_url)
                 else:
                     self.logging.info('Project already exists, Skipping URL: %s', proj_url)
             
         else:
-            logging.error("Failed to Initialize scrapper for PinkSale")
+            logging.error("Failed to Initialize scrapper for SolanaPad")
 
         if self.solanapad.get_Status():
             self.solanapad.stop_driver()
